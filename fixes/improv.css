@@ -933,3 +933,13 @@ li.scaleteam-list-item .comment {
 	word-break: break-word !important;
 	white-space: pre-wrap !important;
 }
+
+
+.google-calendar-link {
+	cursor: pointer;
+}
+
+.google-calendar-link:hover {
+	text-decoration: underline;
+	color: var(--theme-color);
+}
