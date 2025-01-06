@@ -10,18 +10,41 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-let themeColorsLink = null;
-let themeLink = null;
+// let themeColorsLink = null;
+//let themeLink = null;
+
+let themeLink = () => {
+	let raw = document.getElementById("#improved_intra__themelink");
+	if (raw === null)
+	{
+		raw = document.createElement("link");
+		raw.setAttribute("type", "text/css");
+		raw.setAttribute("rel", "stylesheet");
+		document.head.appendChild(raw);
+	}
+	return (raw);
+};
+
+let themeColorsLink = () => {
+	let raw = document.getElementById("#improved_intra__themecolorslink");
+	if (raw === null)
+	{
+		raw = document.createElement("link");
+		raw.setAttribute("type", "text/css");
+		raw.setAttribute("rel", "stylesheet");
+		document.head.appendChild(raw);
+	}
+	return (raw);
+}
+
 
 // Disable a theme, set theme or colors to false to not disable those colors
 function disableTheme(theme, colors) {
-	if (theme !== false && themeLink) {
-		themeLink.remove();
-		themeLink = null;
+	if (theme !== false) {
+		themeLink().remove();
 	}
-	if (colors !== false && themeColorsLink) {
+	if (colors !== false) {
 		themeColorsLink.remove();
-		themeColorsLink = null;
 		reColorizeLogTimeChart();
 	}
 }
@@ -29,22 +52,9 @@ function disableTheme(theme, colors) {
 // Enable a theme, leave colors as null or undefined to use default color scheme
 function enableTheme(theme, colors) {
 	iConsole.log("Enabling theme '" + theme + "'" + (colors ? " in '" + colors + "' mode..." : ""));
-	if (!themeLink) {
-		themeLink = document.createElement("link");
-		themeLink.setAttribute("type", "text/css");
-		themeLink.setAttribute("rel", "stylesheet");
-		document.getElementsByTagName("head")[0].appendChild(themeLink);
-	}
-	themeLink.setAttribute("href", chrome.runtime.getURL("features/themes/"+theme+".css"));
-
+	themeLink().setAttribute("href", chrome.runtime.getURL("features/themes/"+theme+".css"));
 	if (colors && colors !== "default") {
-		if (!themeColorsLink) {
-			themeColorsLink = document.createElement("link");
-			themeColorsLink.setAttribute("type", "text/css");
-			themeColorsLink.setAttribute("rel", "stylesheet");
-			document.getElementsByTagName("head")[0].appendChild(themeColorsLink);
-		}
-		themeColorsLink.setAttribute("href", chrome.runtime.getURL("features/themes/colors/"+colors+".css"));
+		themeColorsLink().setAttribute("href", chrome.runtime.getURL("features/themes/colors/"+colors+".css"));
 		setTimeout(function() {
 			reColorizeLogTimeChart();
 		}, 100);
@@ -139,7 +149,7 @@ window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", fun
 	checkThemeSetting();
 });
 
-checkThemeSetting();
+window.addEventListener("DOMContentLoaded", () => checkThemeSetting());
 
 // fix sign in page issue with background image
 window.addEventListener("DOMContentLoaded", function() {
